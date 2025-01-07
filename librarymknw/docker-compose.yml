@@ -1,0 +1,29 @@
+services:
+  app:
+    build:
+      context: ./book-service-main
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/library
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: morlaknw
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    container_name: mysql-container
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: morlaknw
+      MYSQL_DATABASE: library
+
+  angular-client:
+    build:
+      context: ./library-client-main
+      dockerfile: Dockerfile
+    ports:
+      - "4200:80"
