@@ -1,0 +1,14 @@
+# Usa l'immagine di base di OpenJDK
+FROM openjdk:17-jdk-slim
+
+# Setta il working directory
+WORKDIR /app
+
+# Copia il file JAR nel container
+COPY target/book-service-main-0.0.1-SNAPSHOT.jar app.jar
+
+# Esponi la porta usata dall'applicazione
+EXPOSE 8080
+
+# Definisci il comando per eseguire l'applicazione
+ENTRYPOINT ["java", "-jar", "app.jar"]
