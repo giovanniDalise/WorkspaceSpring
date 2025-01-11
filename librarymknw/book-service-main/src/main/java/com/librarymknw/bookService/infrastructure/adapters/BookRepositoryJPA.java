@@ -10,6 +10,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,20 +28,19 @@ public class BookRepositoryJPA implements BookRepositoryPort {
     }
 
     @Override
+    @Transactional
     public Long create(Book book) throws RepositoryJPAException {
         try {
-            em.getTransaction().begin();
             BookEntity bookEntity = bookMapper.toEntity(book);
             em.persist(bookEntity);
-            em.getTransaction().commit();
             return bookEntity.getBookId();
         } catch (Exception e) {
-            em.getTransaction().rollback();
             throw new RepositoryJPAException("Error creating book " + e.getMessage());
         }
     }
 
     @Override
+    @Transactional
     public List<Book> read() throws RepositoryJPAException {
         try {
             TypedQuery<BookEntity> query = em.createQuery("SELECT b FROM BookEntity b", BookEntity.class);
@@ -52,28 +52,25 @@ public class BookRepositoryJPA implements BookRepositoryPort {
     }
 
     @Override
+    @Transactional
     public Long delete(Long id) throws RepositoryJPAException {
         try {
-            em.getTransaction().begin();
             BookEntity bookEntity = em.find(BookEntity.class, id);
             if (bookEntity != null) {
                 em.remove(bookEntity);
-                em.getTransaction().commit();
                 return id;
             } else {
-                em.getTransaction().rollback();
                 throw new RepositoryJPAException("Book not found with id " + id);
             }
         } catch (Exception e) {
-            em.getTransaction().rollback();
             throw new RepositoryJPAException("Error deleting book " + e.getMessage());
         }
     }
 
     @Override
+    @Transactional
     public Long update(Long id, Book book) throws RepositoryJPAException {
         try {
-            em.getTransaction().begin();
             BookEntity existingEntity = em.find(BookEntity.class, id);
             if (existingEntity == null) {
                 throw new RepositoryJPAException("Book not found");
@@ -81,10 +78,8 @@ public class BookRepositoryJPA implements BookRepositoryPort {
             BookEntity updatedEntity = bookMapper.toEntity(book);
             updatedEntity.setBookId(id); // Assicura che l'ID rimanga lo stesso
             em.merge(updatedEntity);
-            em.getTransaction().commit();
             return id;
         } catch (Exception e) {
-            em.getTransaction().rollback();
             throw new RepositoryJPAException("Error updating book " + e.getMessage());
         }
     }

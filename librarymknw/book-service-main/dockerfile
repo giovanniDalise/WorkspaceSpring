@@ -1,14 +1,23 @@
 # Usa l'immagine di base di OpenJDK
 FROM openjdk:17-jdk-slim
 
+# Installa netcat e curl per scaricare wait-for-it
+RUN apt-get update && apt-get install -y netcat curl
+
+# Scarica lo script wait-for-it
+RUN curl -o /wait-for-it.sh https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh && chmod +x /wait-for-it.sh
+
 # Setta il working directory
 WORKDIR /app
 
 # Copia il file JAR nel container
 COPY target/book-service-main-0.0.1-SNAPSHOT.jar app.jar
 
+# Copia il file data.sql nel volume di inizializzazione di MySQL
+COPY src/main/resources/data.sql /app-data/data.sql
+
+# Usa wait-for-it per aspettare MySQL e poi avvia l'app
+CMD ["sh", "-c", "/wait-for-it.sh db:3306 -- java -jar app.jar"]
+
 # Esponi la porta usata dall'applicazione
 EXPOSE 8080
-
-# Definisci il comando per eseguire l'applicazione
-ENTRYPOINT ["java", "-jar", "app.jar"]
