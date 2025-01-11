@@ -6,11 +6,14 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/library
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: morlaknw
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/library
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
+      SPRING_PROFILES_ACTIVE: docker
     depends_on:
       - db
+    volumes:
+      - app-data:/app-data  # Monta il volume condiviso
 
   db:
     image: mysql:8.0
@@ -18,8 +21,12 @@ services:
     ports:
       - "3307:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: morlaknw
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: library
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - app-data:/docker-entrypoint-initdb.d  # Monta lo stesso volume per l'inizializzazione
 
   angular-client:
     build:
@@ -27,3 +34,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - "4200:80"
+
+volumes:
+  app-data: {}  # Volume condiviso
