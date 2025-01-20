@@ -1,5 +1,7 @@
 package com.librarymknw.bookService.infrastructure.persistence.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.io.Serializable;

@@ -4,6 +4,9 @@ import { RouterOutlet, RouterLink, Router } from '@angular/router';
 import { BooksService } from '../../services/books.service';
 import { Book } from '../../models/book.model';
 import { ActivatedRoute } from '@angular/router';  // Importa ActivatedRoute
+import { MatSnackBar } from '@angular/material/snack-bar';
+
+
 
 
 @Component({
@@ -15,8 +18,13 @@ import { ActivatedRoute } from '@angular/router';  // Importa ActivatedRoute
 })
 export class BooksViewComponent {
 
-  constructor(private activatedRoute: ActivatedRoute,private booksService: BooksService, private router: Router) {}
-
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private booksService: BooksService,
+    private router: Router,
+    private snackBar: MatSnackBar
+  ) {}
+  
   bookId? : number;
   books: Book[] = [];
   searchText?: string; 
@@ -63,21 +71,24 @@ export class BooksViewComponent {
     });
   }
   
-    // Metodo per eliminare il libro
-    deleteBook(bookId: number): void {
-      const bookIdNumber = Number(bookId);
-      if (!isNaN(bookIdNumber)) {
-        this.booksService.deleteBook(bookIdNumber).subscribe(response => {
-          console.log("Book deleted:", response);
-          // Dopo aver eliminato il libro, aggiorna la lista dei libri o naviga da qualche parte
-          this.booksService.getBooks().subscribe(books => {
-            this.books = books; // Ricarica i libri
-          });
-        }, error => {
-          console.error('Error deleting book:', error);
-        });
-      } else {
-        console.error('Invalid Book ID:', bookId);
-      }
+  deleteBook(bookId: number): void {
+    if (!bookId) {
+      console.error('Invalid Book ID:', bookId);
+      return;
     }
+  
+    this.booksService.deleteBook(bookId).subscribe(() => {
+      // Rimuovi il libro dalla lista visibile nel frontend
+      this.books = this.books.filter(book => book.bookId !== bookId);
+      
+      // Mostra notifica di conferma
+      this.snackBar.open('Libro eliminato con successo!', 'Chiudi', {
+        duration: 3000, // Notifica visibile per 3 secondi
+        verticalPosition: 'top', // Posizione in alto
+        horizontalPosition: 'center' // Centrato orizzontalmente
+      });
+    }, error => {
+      console.error('Error deleting book:', error);
+    });
+  }   
 }

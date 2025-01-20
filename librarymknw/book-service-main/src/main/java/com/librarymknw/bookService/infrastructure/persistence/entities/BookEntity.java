@@ -1,5 +1,8 @@
 package com.librarymknw.bookService.infrastructure.persistence.entities;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -39,7 +42,8 @@ public class BookEntity implements Serializable {
     public BookEntity() {
     }
 
-    public BookEntity(String title, String isbn, EditorEntity editor, AuthorEntity[] authors) {
+    public BookEntity(Long bookId, String title, String isbn, EditorEntity editor, AuthorEntity[] authors) {
+        this.bookId = bookId;
         this.title = title;
         this.isbn = isbn;
         this.editor = editor;
@@ -58,20 +62,12 @@ public class BookEntity implements Serializable {
         this.editor = editor;
     }
 
-    public AuthorEntity[] getAuthorsArray() {
-        return authors.toArray(new AuthorEntity[authors.size()]);
-    }
-
     public Long getBookId() {
         return bookId;
     }
 
     public void setBookId(Long bookId) {
         this.bookId = bookId;
-    }
-
-    public Set<AuthorEntity> getAuthorsSet() {
-        return authors;
     }
 
     public void setAuthors(Set<AuthorEntity> authors) {

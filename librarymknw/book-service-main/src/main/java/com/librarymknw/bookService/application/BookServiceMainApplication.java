@@ -25,14 +25,8 @@ public class BookServiceMainApplication {
 /*	@Bean
 	public CommandLineRunner demo(BookRepositoryPort repository) {
 		return (args) -> {
-			System.out.println("Fetching all books from the repository:");
 
-			List<Book> books = repository.read();
-			if (books.isEmpty()) {
-				System.out.println("No books found.");
-			} else {
-				books.forEach(book -> System.out.println(book));
-			}
+			Long idBook = repository.delete(6L);
 		};
 	}*/
 

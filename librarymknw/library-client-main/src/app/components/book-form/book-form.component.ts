@@ -2,15 +2,16 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Book } from '../../models/book.model';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BooksService } from '../../services/books.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Author } from '../../models/author.model';
 import { HttpHeaders } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material/snack-bar'; // Aggiungi l'import per MatSnackBar
 
 @Component({
   selector: 'app-book-form',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, FormsModule],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule, RouterOutlet, RouterLink, RouterLinkActive, ], 
   templateUrl: './book-form.component.html',
   styleUrl: './book-form.component.scss'
 })
@@ -24,7 +25,8 @@ export class BookFormComponent {
     private booksService: BooksService,
     private fb: FormBuilder,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {
     // Inizializza bookForm con un form per gestire un array di autori e un oggetto editor
     this.bookForm = this.fb.group({
@@ -101,6 +103,16 @@ export class BookFormComponent {
   private createBook(book: Book): void {
     this.booksService.createBook(book).subscribe(response => {
       console.log("Book created:", response);
+      // Mostra una notifica di successo quando il libro viene creato
+      this.snackBar.open('Book created successfully!', 'Close', {
+        duration: 3000,  // Durata della notifica (in millisecondi)
+      });
+    }, error => {
+      // Mostra una notifica di errore in caso di fallimento
+      this.snackBar.open('Failed to create book. Please try again.', 'Close', {
+        duration: 3000,
+        panelClass: ['error-snackbar']  // Puoi personalizzare l'aspetto con classi CSS
+      });
     });
   }
 
@@ -113,6 +125,17 @@ export class BookFormComponent {
         const updatedBook = { ...book, bookId: bookIdNumber };  // Imposta l'ID del libro da bookIdNumber
         this.booksService.updateBook(updatedBook).subscribe(response => {
           console.log("Book updated:", response);
+          
+          // Mostra una notifica di successo dopo l'aggiornamento
+          this.snackBar.open('Book updated successfully!', 'Close', {
+            duration: 3000,  // Durata della notifica (in millisecondi)
+          });
+        }, error => {
+          // Mostra una notifica di errore in caso di fallimento
+          this.snackBar.open('Failed to update book. Please try again.', 'Close', {
+            duration: 3000,
+            panelClass: ['error-snackbar']  // Puoi personalizzare l'aspetto con classi CSS
+          });
         });
       } else {
         console.error('Invalid Book ID:', this.bookId);
@@ -121,8 +144,6 @@ export class BookFormComponent {
       console.error('Book ID is missing for update');
     }
   }
-  
-  
 
   private searchBook(criteria: Book): void {
     const headers = new HttpHeaders({

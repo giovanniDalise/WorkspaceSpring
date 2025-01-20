@@ -16,7 +16,8 @@ public class Book {
     public Book() {}
 
     // Costruttore che accetta Set<Author>
-    public Book(String title, String isbn, Editor editor, Set<Author> authors) {
+    public Book(Long bookId, String title, String isbn, Editor editor, Set<Author> authors) {
+        this.bookId = bookId;
         this.title = title;
         this.isbn = isbn;
         this.editor = editor;
@@ -62,11 +63,6 @@ public class Book {
 
     public void setAuthors(Set<Author> authors) {
         this.authors = (authors != null) ? authors : new HashSet<>();
-    }
-
-    // Conversione Set in array (se necessario)
-    public Author[] getAuthorsArray() {
-        return authors.toArray(new Author[0]);
     }
 
     // Equals e hashCode basati su bookId

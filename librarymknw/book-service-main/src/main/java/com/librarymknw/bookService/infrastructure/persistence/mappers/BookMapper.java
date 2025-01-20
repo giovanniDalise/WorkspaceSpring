@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 public class BookMapper {
     public static Book toDomain(BookEntity entity) {
         return new Book(
+                entity.getBookId(),
                 entity.getTitle(),
                 entity.getIsbn(),
                 EditorMapper.toDomain(entity.getEditor()),
@@ -20,6 +21,7 @@ public class BookMapper {
 
     public static BookEntity toEntity(Book book) {
         BookEntity entity = new BookEntity();
+        entity.setBookId(book.getBookId());
         entity.setTitle(book.getTitle());
         entity.setIsbn(book.getIsbn());
         entity.setEditor(EditorMapper.toEntity(book.getEditor()));
