@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+/* import { Injectable } from '@angular/core';
 import { CanActivate } from '@angular/router';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../services/authentication.service';
@@ -18,3 +18,4 @@ export class RedirectGuard implements CanActivate {
     return true;  // Permette l'accesso alla pagina di login
   }
 }
+ */

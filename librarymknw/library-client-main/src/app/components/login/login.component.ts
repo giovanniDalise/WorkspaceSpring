@@ -22,7 +22,7 @@ export class LoginComponent {
       this.auth.login(this.email, this.password).subscribe({
         next: (resp) => {
           if (typeof window !== 'undefined' && window.sessionStorage) {
-            sessionStorage.setItem("token", resp.token);
+            sessionStorage.setItem("authToken", resp.token); // 
           }
           this.router.navigate(['home']);
         },

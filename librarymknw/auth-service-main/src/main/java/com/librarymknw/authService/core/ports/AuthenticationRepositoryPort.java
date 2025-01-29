@@ -7,4 +7,5 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 public interface AuthenticationRepositoryPort {
     boolean checkUserCredentials(String email, String password); // Verifica delle credenziali
-    }
+    public String getUserRole(String email);
+}

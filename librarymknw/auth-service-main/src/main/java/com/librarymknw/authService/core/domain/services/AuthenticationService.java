@@ -22,7 +22,8 @@ public class AuthenticationService  implements AuthenticationServicePort {
         boolean authenticated = repositoryPort.checkUserCredentials(loginRequest.getEmail(), loginRequest.getPassword());
         if (authenticated) {
             // Se l'autenticazione è riuscita, generiamo il token JWT
-            String token = jwtPort.generateJwtToken(loginRequest.getEmail());
+            String role = repositoryPort.getUserRole(loginRequest.getEmail()); // Ottieni il ruolo
+            String token = jwtPort.generateJwtToken(loginRequest.getEmail(), role);
             return new AuthResponse(token); // Restituiamo il token
         }
         return null; // Se non autenticato, restituiamo null

@@ -19,4 +19,13 @@ public class AuthRepositoryAdapter implements AuthenticationRepositoryPort {
         int count = jdbcTemplate.queryForObject(sql, new Object[]{email, password}, Integer.class);
         return count > 0; // Se il conteggio è maggiore di 0, significa che le credenziali sono corrette
     }
+
+    @Override
+    // Recupero ruolo dell'utente
+    public String getUserRole(String email) {
+        String sql = "SELECT r.name FROM user u " +
+                "JOIN role r ON u.role = r.role_id " +
+                "WHERE u.email = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{email}, String.class);
+    }
 }

@@ -18,11 +18,12 @@ public class JwtAdapter implements JwtPort {
     }
 
     @Override
-    public String generateJwtToken(String email) {
+    public String generateJwtToken(String email, String role) {
         Algorithm algorithm = Algorithm.HMAC512(jwtSecret);  // Algoritmo HMAC con la chiave segreta
 
         return JWT.create()
                 .withSubject(email)  // Imposta l'email come subject
+                .withClaim("role", role)  // Aggiunto il ruolo come claim
                 .withIssuedAt(new Date())  // Data di emissione
                 .withExpiresAt(new Date(System.currentTimeMillis() + jwtExpirationMs))  // Data di scadenza
                 .sign(algorithm);  // Firma il token

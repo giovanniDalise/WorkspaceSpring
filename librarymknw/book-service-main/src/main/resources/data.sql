@@ -90,7 +90,7 @@ VALUES
 insert into user (name, email, password, role)
 values
 ('Piero Piermenti', 'pieropiermenti@gmail.com', 'alutamelom!!a88', 1),
-('Silvia Losinvia', 'losinginvia@pmail.com', 's!!utamelomel88', 2),
+('Silvia Losinvia', 'losinginvia@pmail.com', 's!!utamelomel88', 1),
 ('Croc Odillo', 'temagno@dmail.com', 's!!tameCCmela88', 2)
 ;
 
