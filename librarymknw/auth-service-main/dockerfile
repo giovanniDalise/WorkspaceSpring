@@ -1,0 +1,20 @@
+# Usa l'immagine di base di OpenJDK 17
+FROM openjdk:17-jdk-slim
+
+# Installa netcat e curl, poi rimuove i file temporanei
+RUN apt-get update && apt-get install -y netcat curl && rm -rf /var/lib/apt/lists/*
+
+# Scarica e imposta i permessi per wait-for-it
+RUN curl -o /wait-for-it.sh https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh && chmod +x /wait-for-it.sh
+
+# Imposta la working directory
+WORKDIR /app
+
+# Copia il file JAR nel container
+COPY target/auth-service-main-0.0.1-SNAPSHOT.jar app.jar
+
+# Aspetta il database e avvia l'app
+CMD ["sh", "-c", "/wait-for-it.sh db:3306 --timeout=60 --strict -- java -jar app.jar"]
+
+# Espone la porta dell'app
+EXPOSE 8081

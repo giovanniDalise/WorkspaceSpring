@@ -5,6 +5,7 @@ DROP TABLE IF EXISTS editor;
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS reservation;
 
+
 CREATE TABLE IF NOT EXISTS editor  (
 	editor_id BIGINT NOT NULL AUTO_INCREMENT,
     name VARCHAR (255) NOT NULL,
@@ -37,7 +38,8 @@ CREATE TABLE IF NOT EXISTS books_authors (
 CREATE TABLE user (
     user_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    email VARCHAR(100) NOT NULL UNIQUE
+    email VARCHAR(100) NOT NULL,
+    password VARCHAR(15) NOT NULL
 );
 
 CREATE TABLE reservation (
@@ -75,11 +77,11 @@ INSERT INTO books_authors (book, author) VALUES (4, 1);  -- Jane Austen per "Emm
 INSERT INTO books_authors (book, author) VALUES (5, 5);  -- J.K. Rowling per "Harry Potter and the Sorcerer's Stone"
 
 
-insert into user (name, email)
+insert into user (name, email, password)
 values
-('Piero Piermenti', 'pieropiermenti@gmail.com'),
-('Silvia Losinvia', 'losinginvia@pmail.com'),
-('Croc Odillo', 'temagno@dmail.com')
+('Piero Piermenti', 'pieropiermenti@gmail.com', 'alutamelom!!a88'),
+('Silvia Losinvia', 'losinginvia@pmail.com', 's!!utamelomel88'),
+('Croc Odillo', 'temagno@dmail.com', 's!!tameCCmela88')
 ;
 
 INSERT INTO reservation (user_id, book_id, reservation_date, due_date)

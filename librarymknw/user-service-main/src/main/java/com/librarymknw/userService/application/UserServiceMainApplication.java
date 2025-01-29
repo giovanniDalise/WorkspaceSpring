@@ -1,6 +1,7 @@
 package com.librarymknw.userService.application;
 
 import com.librarymknw.userService.core.domain.models.User;
+import com.librarymknw.userService.core.domain.services.UserService;
 import com.librarymknw.userService.core.ports.UserRepositoryPort;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -19,7 +20,12 @@ public class UserServiceMainApplication {
 		SpringApplication.run(UserServiceMainApplication.class, args);
 	}
 
-    @Bean
+	@Bean
+	public UserService userService(UserRepositoryPort userRepositoryPort) {
+		return new UserService(userRepositoryPort); // Iniettiamo BookRepositoryPort
+	}
+
+/*    @Bean
 	public CommandLineRunner demo(UserRepositoryPort repository) {
 		return (args) -> {
 			System.out.println("Fetching all books from the repository:");
@@ -31,5 +37,5 @@ public class UserServiceMainApplication {
 				books.forEach(book -> System.out.println(book));
 			}
 		};
-	}
+	}*/
 }

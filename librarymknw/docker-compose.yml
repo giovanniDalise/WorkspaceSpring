@@ -15,6 +15,21 @@ services:
     volumes:
       - app-data:/app-data  # Monta il volume condiviso
 
+  auth-service-main:
+    build:
+      context: ./auth-service-main  
+      dockerfile: Dockerfile  
+    ports:
+      - "8081:8081"  
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/library
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
+      SPRING_PROFILES_ACTIVE: docker
+
+    depends_on:
+      - db  
+
   db:
     image: mysql:8.0
     container_name: mysql-container

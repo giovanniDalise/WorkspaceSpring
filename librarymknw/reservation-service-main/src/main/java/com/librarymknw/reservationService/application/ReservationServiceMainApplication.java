@@ -1,6 +1,7 @@
 package com.librarymknw.reservationService.application;
 
 import com.librarymknw.reservationService.core.domain.models.Reservation;
+import com.librarymknw.reservationService.core.domain.services.ReservationService;
 import com.librarymknw.reservationService.core.ports.ReservationRepositoryPort;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.CommandLineRunner;
@@ -20,7 +21,12 @@ public class ReservationServiceMainApplication {
 		SpringApplication.run(ReservationServiceMainApplication.class, args);
 	}
 
-    @Bean
+	@Bean
+	public ReservationService reservationService(ReservationRepositoryPort reservationRepositoryPort) {
+		return new ReservationService(reservationRepositoryPort); // Iniettiamo BookRepositoryPort
+	}
+
+/*    @Bean
 	public CommandLineRunner demo(ReservationRepositoryPort repository) {
 		return (args) -> {
 			System.out.println("Fetching all books from the repository:");
@@ -32,5 +38,5 @@ public class ReservationServiceMainApplication {
 				books.forEach(book -> System.out.println(book));
 			}
 		};
-	}
+	}*/
 }

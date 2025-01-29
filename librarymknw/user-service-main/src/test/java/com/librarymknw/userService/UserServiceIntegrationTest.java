@@ -42,7 +42,7 @@ public class UserServiceIntegrationTest {
     @BeforeEach
     public void setUp() {
         // Inizializza un utente di test
-        user = new User("John Doe", "john.doe@example.com");
+        user = new User("John Doe", "john.doe@example.com","oejhfyusoi88!!u");
 
         // Inizializza MockMvc con il controller da testare
         mockMvc = MockMvcBuilders.standaloneSetup(userRest).build();

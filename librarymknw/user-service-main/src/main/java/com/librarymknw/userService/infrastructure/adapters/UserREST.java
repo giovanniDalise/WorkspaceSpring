@@ -2,6 +2,7 @@ package com.librarymknw.userService.infrastructure.adapters;
 
 import com.librarymknw.userService.core.domain.models.User;
 import com.librarymknw.userService.core.ports.UserRepositoryPort;
+import com.librarymknw.userService.core.ports.UserServicePort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,30 +14,31 @@ import java.util.List;
 @RequestMapping("/library/users")
 public class UserREST {
 
-    private final UserRepositoryPort userRepositoryPort;
+    private final UserServicePort userServicePort;
 
     @Autowired
-    public UserREST(UserRepositoryPort userRepositoryPort) {
-        this.userRepositoryPort = userRepositoryPort;
+    public UserREST(UserServicePort userServicePort) {
+
+        this.userServicePort = userServicePort;
     }
 
     // Endpoint per ottenere tutti gli utenti
     @GetMapping
     public List<User> getAllUsers() {
-        return userRepositoryPort.findAll();
+        return userServicePort.getAllUsers();
     }
 
     // Endpoint per ottenere un utente per id
     @GetMapping("/{id}")
     public User getUserById(@PathVariable Long id) {
-        return userRepositoryPort.findById(id);
+        return userServicePort.getUserById(id);
     }
 
     // Endpoint per creare un nuovo utente
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody User user) {
         try {
-            userRepositoryPort.save(user);
+            userServicePort.createUser(user);
             return ResponseEntity.status(HttpStatus.CREATED).body(user);
         } catch (RuntimeException e) {
             // Log dell'errore
@@ -49,13 +51,14 @@ public class UserREST {
     @PutMapping("/{id}")
     public void updateUser(@PathVariable Long id, @RequestBody User user) {
         user.setId(id);  // Assicurati che l'id venga settato
-        userRepositoryPort.update(user);
+        userServicePort.updateUser(id, user);
     }
 
     // Endpoint per eliminare un utente
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable Long id) {
-        userRepositoryPort.delete(id);
+        userServicePort.deleteUser(id);
     }
+
 }

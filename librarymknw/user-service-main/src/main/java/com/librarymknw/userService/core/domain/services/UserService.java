@@ -3,11 +3,9 @@ package com.librarymknw.userService.core.domain.services;
 import com.librarymknw.userService.core.domain.models.User;
 import com.librarymknw.userService.core.ports.UserRepositoryPort;
 import com.librarymknw.userService.core.ports.UserServicePort;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public class UserService implements UserServicePort {
 
     private final UserRepositoryPort repository;

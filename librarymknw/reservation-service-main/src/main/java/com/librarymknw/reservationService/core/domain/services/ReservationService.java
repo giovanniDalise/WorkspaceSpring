@@ -5,11 +5,9 @@ import com.librarymknw.reservationService.core.domain.models.Reservation;
 import com.librarymknw.reservationService.core.ports.ReservationRepositoryPort;
 import com.librarymknw.reservationService.core.ports.ReservationServicePort;
 //import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public class ReservationService implements ReservationServicePort {
 
     private final ReservationRepositoryPort repository;

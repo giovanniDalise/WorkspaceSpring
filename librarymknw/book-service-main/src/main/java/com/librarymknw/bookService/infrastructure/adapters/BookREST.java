@@ -2,6 +2,7 @@ package com.librarymknw.bookService.infrastructure.adapters;
 
 import com.librarymknw.bookService.core.domain.models.Book;
 import com.librarymknw.bookService.core.ports.BookRepositoryPort;
+import com.librarymknw.bookService.core.ports.BookServicePort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,16 +13,15 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class BookREST {
 
-    private final BookRepositoryPort bookRepository;
+    private final BookServicePort bookService;  // Usare BookServicePort invece di BookRepositoryPort
 
-    public BookREST(BookRepositoryPort bookRepository) {
-        this.bookRepository = bookRepository;
+    public BookREST(BookServicePort bookService) {
+        this.bookService = bookService;
     }
-
     @GetMapping
     public ResponseEntity<List<Book>> getBooks() {
         try {
-            List<Book> books = bookRepository.read();
+            List<Book> books = bookService.getAllBooks();
             return ResponseEntity.ok(books);
         } catch (Exception e) {
             e.printStackTrace();
@@ -32,7 +32,7 @@ public class BookREST {
     @PostMapping
     public ResponseEntity<Long> addBook(@RequestBody Book book) {
         try {
-            Long createdBookId = bookRepository.create(book);
+            Long createdBookId = bookService.createBook(book);
             return ResponseEntity.ok(createdBookId);
         } catch (Exception e) {
             e.printStackTrace();
@@ -43,7 +43,7 @@ public class BookREST {
     @DeleteMapping("/{id}")
     public ResponseEntity<Long> deleteBook(@PathVariable Long id) {
         try {
-            Long deletedBookId = bookRepository.delete(id);
+            Long deletedBookId = bookService.deleteBook(id);
             return ResponseEntity.ok(deletedBookId);
         } catch (Exception e) {
             e.printStackTrace();
@@ -54,7 +54,7 @@ public class BookREST {
     @PutMapping("/{id}")
     public ResponseEntity<Long> updateBook(@PathVariable Long id, @RequestBody Book book) {
         try {
-            Long updatedBookId = bookRepository.update(id, book);
+            Long updatedBookId = bookService.updateBook(id, book);
             return ResponseEntity.ok(updatedBookId);
         } catch (Exception e) {
             e.printStackTrace();
@@ -65,7 +65,7 @@ public class BookREST {
     @GetMapping("/{id}")
     public ResponseEntity<Book> getBookById(@PathVariable Long id) {
         try {
-            Book book = bookRepository.getById(id);
+            Book book = bookService.getBookById(id);
             if (book == null) {
                 return ResponseEntity.notFound().build();
             }
@@ -79,7 +79,7 @@ public class BookREST {
     @GetMapping("/findByString")
     public ResponseEntity<List<Book>> findBooksByString(@RequestParam String param) {
         try {
-            List<Book> books = bookRepository.findByText(param);
+            List<Book> books = bookService.getBooksByText(param);
             return ResponseEntity.ok(books);
         } catch (Exception e) {
             e.printStackTrace();
@@ -90,7 +90,7 @@ public class BookREST {
     @PostMapping("/findByBook")
     public ResponseEntity<List<Book>> findBooksByBook(@RequestBody Book book) {
         try {
-            List<Book> books = bookRepository.findByObject(book);
+            List<Book> books = bookService.getBooksByObject(book);
             return ResponseEntity.ok(books);
         } catch (Exception e) {
             e.printStackTrace();

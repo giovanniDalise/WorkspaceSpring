@@ -2,6 +2,7 @@ package com.librarymknw.reservationService.infrastructure.adapters;
 
 import com.librarymknw.reservationService.core.domain.models.Reservation;
 import com.librarymknw.reservationService.core.ports.ReservationRepositoryPort;
+import com.librarymknw.reservationService.core.ports.ReservationServicePort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,30 +14,30 @@ import java.util.List;
 @RequestMapping("/library/reservations")
 public class ReservationREST {
 
-    private final ReservationRepositoryPort reservationRepositoryPort;
+    private final ReservationServicePort reservationService;  // Usare BookServicePort invece di BookRepositoryPort
 
     @Autowired
-    public ReservationREST(ReservationRepositoryPort reservationRepositoryPort) {
-        this.reservationRepositoryPort = reservationRepositoryPort;
+    public ReservationREST(ReservationServicePort reservationService) {
+        this.reservationService = reservationService;
     }
 
     // Endpoint per ottenere tutte le prenotazioni
     @GetMapping
     public List<Reservation> getAllReservations() {
-        return reservationRepositoryPort.findAll();
+        return reservationService.getAllReservations();
     }
 
     // Endpoint per ottenere una prenotazione per id
     @GetMapping("/{id}")
     public Reservation getReservationById(@PathVariable Long id) {
-        return reservationRepositoryPort.findById(id);
+        return reservationService.getReservationById(id);
     }
 
     // Endpoint per creare una nuova prenotazione
     @PostMapping
     public ResponseEntity<?> createReservation(@RequestBody Reservation reservation) {
         try {
-            reservationRepositoryPort.save(reservation);
+            reservationService.createReservation(reservation);
             return ResponseEntity.status(HttpStatus.CREATED).body(reservation);
         } catch (RuntimeException e) {
             // Log dell'errore
@@ -48,13 +49,13 @@ public class ReservationREST {
     @PutMapping("/{id}")
     public void updateReservation(@PathVariable Long id, @RequestBody Reservation reservation) {
         reservation.setId(id); // Assicurati che l'id venga settato
-        reservationRepositoryPort.update(reservation);
+        reservationService.updateReservation(id, reservation);
     }
 
     // Endpoint per eliminare una prenotazione
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteReservation(@PathVariable Long id) {
-        reservationRepositoryPort.delete(id);
+        reservationService.deleteReservation(id);
     }
 }
