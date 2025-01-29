@@ -1,18 +1,17 @@
 DROP TABLE IF EXISTS books_authors;
-DROP TABLE IF EXISTS book;
 DROP TABLE IF EXISTS author;
+DROP TABLE IF EXISTS reservation;
+DROP TABLE IF EXISTS book;
 DROP TABLE IF EXISTS editor;
 DROP TABLE IF EXISTS user;
-DROP TABLE IF EXISTS reservation;
 
-
-CREATE TABLE IF NOT EXISTS editor  (
+CREATE TABLE editor  (
 	editor_id BIGINT NOT NULL AUTO_INCREMENT,
     name VARCHAR (255) NOT NULL,
     PRIMARY KEY (editor_id)
 );
 
-CREATE TABLE IF NOT EXISTS author (
+CREATE TABLE author (
 	author_id BIGINT NOT NULL AUTO_INCREMENT,
     name VARCHAR (255) NOT NULL,
     surname VARCHAR (255) NOT NULL,
@@ -28,18 +27,25 @@ create table book (
 	FOREIGN KEY (editor) REFERENCES editor(editor_id)
 );
 
-CREATE TABLE IF NOT EXISTS books_authors (
+CREATE TABLE books_authors (
     book BIGINT,
     author BIGINT,
     FOREIGN KEY (book) REFERENCES book(book_id),
     FOREIGN KEY (author) REFERENCES author(author_id)
 );
 
+CREATE TABLE role (
+    role_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) UNIQUE NOT NULL
+);
+
 CREATE TABLE user (
     user_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    email VARCHAR(100) NOT NULL,
-    password VARCHAR(15) NOT NULL
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(15) NOT NULL,
+    role BIGINT NOT NULL,
+	FOREIGN KEY (role) REFERENCES role(role_id)
 );
 
 CREATE TABLE reservation (
@@ -76,12 +82,16 @@ INSERT INTO books_authors (book, author) VALUES (3, 2);  -- George Orwell per "1
 INSERT INTO books_authors (book, author) VALUES (4, 1);  -- Jane Austen per "Emma"
 INSERT INTO books_authors (book, author) VALUES (5, 5);  -- J.K. Rowling per "Harry Potter and the Sorcerer's Stone"
 
+INSERT INTO role (name)
+VALUES
+('user'),
+('admin');
 
-insert into user (name, email, password)
+insert into user (name, email, password, role)
 values
-('Piero Piermenti', 'pieropiermenti@gmail.com', 'alutamelom!!a88'),
-('Silvia Losinvia', 'losinginvia@pmail.com', 's!!utamelomel88'),
-('Croc Odillo', 'temagno@dmail.com', 's!!tameCCmela88')
+('Piero Piermenti', 'pieropiermenti@gmail.com', 'alutamelom!!a88', 1),
+('Silvia Losinvia', 'losinginvia@pmail.com', 's!!utamelomel88', 2),
+('Croc Odillo', 'temagno@dmail.com', 's!!tameCCmela88', 2)
 ;
 
 INSERT INTO reservation (user_id, book_id, reservation_date, due_date)
