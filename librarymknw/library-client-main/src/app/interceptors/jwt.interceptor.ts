@@ -7,8 +7,6 @@ export const JwtInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: H
   const authService = inject(AuthenticationService);
   const token = authService.getToken();
 
-  console.log('Token in interceptor:', token); // Log per vedere se il token viene recuperato
-
   if (token) {
     const clonedReq = req.clone({
       setHeaders: {

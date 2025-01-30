@@ -23,22 +23,17 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     if (this.isBrowser()) {
       const token = sessionStorage.getItem('authToken');  // Retrieve the JWT token
-  
-      console.log('Token recuperato:', token);  // Log per vedere se il token è presente nel sessionStorage
-  
+    
       if (token) {
         // Decodifica del token
         const decodedToken: any = jwtDecode(token);
-        console.log('Token decodificato:', decodedToken);
   
         // Verifica se il ruolo è "admin" e aggiorna la variabile
         this.isAdmin = decodedToken.role === 'admin';
-        console.log('Ruolo dell\'utente:', decodedToken.role); // Log per vedere il ruolo
   
         this.isAuthenticated = true;  // Imposta come autenticato se il token è presente
       } else {
         this.isAuthenticated = false;
-        console.log('Token non trovato, utente non autenticato');
       }
     }
   }

@@ -1,6 +1,6 @@
 package com.librarymknw.bookService.infrastructure.adapters;
 
-import com.librarymknw.bookService.infrastructure.exceptions.RepositoryJPAException;
+import com.librarymknw.bookService.infrastructure.exceptions.BookRepositoryJPAException;
 import com.librarymknw.bookService.core.domain.models.Book;
 import com.librarymknw.bookService.core.ports.BookRepositoryPort;
 import com.librarymknw.bookService.infrastructure.persistence.entities.BookEntity;
@@ -29,73 +29,73 @@ public class BookRepositoryJPA implements BookRepositoryPort {
 
     @Override
     @Transactional
-    public Long create(Book book) throws RepositoryJPAException {
+    public Long create(Book book) throws BookRepositoryJPAException {
         try {
             BookEntity bookEntity = bookMapper.toEntity(book);
             em.persist(bookEntity);
             return bookEntity.getBookId();
         } catch (Exception e) {
-            throw new RepositoryJPAException("Error creating book " + e.getMessage());
+            throw new BookRepositoryJPAException("Error creating book " + e.getMessage());
         }
     }
 
     @Override
     @Transactional
-    public List<Book> read() throws RepositoryJPAException {
+    public List<Book> read() throws BookRepositoryJPAException {
         try {
             TypedQuery<BookEntity> query = em.createQuery("SELECT b FROM BookEntity b", BookEntity.class);
             List<BookEntity> bookEntities = query.getResultList();
             return bookMapper.toDomainList(bookEntities);
         } catch (Exception e) {
-            throw new RepositoryJPAException("Error reading books " + e.getMessage());
+            throw new BookRepositoryJPAException("Error reading books " + e.getMessage());
         }
     }
 
     @Override
     @Transactional
-    public Long delete(Long id) throws RepositoryJPAException {
+    public Long delete(Long id) throws BookRepositoryJPAException {
         try {
             BookEntity bookEntity = em.find(BookEntity.class, id);
             if (bookEntity != null) {
                 em.remove(bookEntity);
                 return id;
             } else {
-                throw new RepositoryJPAException("Book not found with id " + id);
+                throw new BookRepositoryJPAException("Book not found with id " + id);
             }
         } catch (Exception e) {
-            throw new RepositoryJPAException("Error deleting book " + e.getMessage());
+            throw new BookRepositoryJPAException("Error deleting book " + e.getMessage());
         }
     }
 
     @Override
     @Transactional
-    public Long update(Long id, Book book) throws RepositoryJPAException {
+    public Long update(Long id, Book book) throws BookRepositoryJPAException {
         try {
             BookEntity existingEntity = em.find(BookEntity.class, id);
             if (existingEntity == null) {
-                throw new RepositoryJPAException("Book not found");
+                throw new BookRepositoryJPAException("Book not found");
             }
             BookEntity updatedEntity = bookMapper.toEntity(book);
             updatedEntity.setBookId(id); // Assicura che l'ID rimanga lo stesso
             em.merge(updatedEntity);
             return id;
         } catch (Exception e) {
-            throw new RepositoryJPAException("Error updating book " + e.getMessage());
+            throw new BookRepositoryJPAException("Error updating book " + e.getMessage());
         }
     }
 
     @Override
-    public Book getById(Long id) throws RepositoryJPAException {
+    public Book getById(Long id) throws BookRepositoryJPAException {
         try {
             BookEntity bookEntity = em.find(BookEntity.class, id);
             return bookEntity != null ? bookMapper.toDomain(bookEntity) : null;
         } catch (Exception e) {
-            throw new RepositoryJPAException("Error getting book by id " + e.getMessage());
+            throw new BookRepositoryJPAException("Error getting book by id " + e.getMessage());
         }
     }
 
     @Override
-    public List<Book> findByText(String searchText) throws RepositoryJPAException {
+    public List<Book> findByText(String searchText) throws BookRepositoryJPAException {
         try {
             String query = "SELECT b FROM BookEntity b " +
                     "LEFT JOIN b.editor e " +
@@ -113,12 +113,12 @@ public class BookRepositoryJPA implements BookRepositoryPort {
 
             return bookMapper.toDomainList(bookEntities);
         } catch (Exception e) {
-            throw new RepositoryJPAException("Error finding books by text " + e.getMessage());
+            throw new BookRepositoryJPAException("Error finding books by text " + e.getMessage());
         }
     }
 
     @Override
-    public List<Book> findByObject(Book searchBook) throws RepositoryJPAException {
+    public List<Book> findByObject(Book searchBook) throws BookRepositoryJPAException {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<BookEntity> cq = cb.createQuery(BookEntity.class);
         Root<BookEntity> book = cq.from(BookEntity.class);

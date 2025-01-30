@@ -2,7 +2,7 @@ package com.librarymknw.userService.infrastructure.adapters;
 
 import com.librarymknw.userService.core.domain.models.User;
 import com.librarymknw.userService.core.ports.UserRepositoryPort;
-import com.librarymknw.userService.infrastructure.exceptions.RepositoryMBException;
+import com.librarymknw.userService.infrastructure.exceptions.UserRepositoryMBException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -23,7 +23,7 @@ public class UserRepositoryMB implements UserRepositoryPort {
             InputStream inputStream = Resources.getResourceAsStream("mybatis-config.xml");
             sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
         } catch (IOException e) {
-            throw new RepositoryMBException("Failed to initialize SqlSessionFactory", e);
+            throw new UserRepositoryMBException("Failed to initialize SqlSessionFactory", e);
         }
     }
 

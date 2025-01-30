@@ -33,7 +33,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         final String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         String requestURI = request.getRequestURI();
 
-        // Applicare il filtro solo per richieste che richiedono il token (ad esempio, POST, PUT, DELETE)
+        // (filtro per token non valido nel caso dell'admin))
         if (requestURI.startsWith("/library/") && !requestURI.equals("/library/findByString")) {
             if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN, "Token mancante o non valido");

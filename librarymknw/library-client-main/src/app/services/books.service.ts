@@ -2,8 +2,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { Book } from '../models/book.model';
-import { catchError } from 'rxjs/operators';
-import { throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -38,22 +36,7 @@ export class BooksService {
   }
 
   findByObject(criteria: Partial<Book>, options?: { headers?: HttpHeaders }): Observable<Book[]> {
-    // Log dei dati che vengono inviati
-    console.log('Criteria:', criteria);
-  
-    // Verifica se gli headers sono stati passati
-    if (options?.headers) {
-      console.log('Request headers:', options.headers);
-    } else {
-      console.log('No headers provided');
-    }
-  
-    return this.http.post<Book[]>(`${this.apiUrl}/findByBook`, criteria, options).pipe(
-      catchError((error) => {
-        // Log dell'errore che si verifica
-        console.error('Error occurred:', error);
-        return throwError(error);  // Rilancia l'errore
-      })
-    );
+    return this.http.post<Book[]>(`${this.apiUrl}/findByBook`, criteria, options)
   }
+  
 }
