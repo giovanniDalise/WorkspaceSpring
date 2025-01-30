@@ -21,6 +21,7 @@ export class LoginComponent {
     if (this.email && this.password) {
       this.auth.login(this.email, this.password).subscribe({
         next: (resp) => {
+          // Usa localStorage invece di sessionStorage per la persistenza del token
           if (typeof window !== 'undefined' && window.sessionStorage) {
             sessionStorage.setItem("authToken", resp.token); // 
           }

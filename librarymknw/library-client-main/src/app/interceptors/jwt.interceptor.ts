@@ -4,8 +4,11 @@ import { inject } from '@angular/core'; // Iniettare direttamente il servizio
 import { AuthenticationService } from '../services/authentication.service';
 
 export const JwtInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: HttpHandlerFn): Observable<HttpEvent<any>> => {
-  const authService = inject(AuthenticationService);  // Iniezione del servizio direttamente nell'interceptor
-  const token = authService.getToken();  // Usa il servizio per ottenere il token
+  const authService = inject(AuthenticationService);
+  const token = authService.getToken();
+
+  console.log('Token in interceptor:', token); // Log per vedere se il token viene recuperato
+
   if (token) {
     const clonedReq = req.clone({
       setHeaders: {
@@ -14,5 +17,6 @@ export const JwtInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: H
     });
     return next(clonedReq);
   }
+
   return next(req);
 };

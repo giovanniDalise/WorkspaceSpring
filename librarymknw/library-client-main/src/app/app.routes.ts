@@ -11,7 +11,7 @@ export const routes: Routes = [
     { path: 'home', component: HomeComponent},  // Proteggi la home
     { path: 'login', component: LoginComponent},  // RedirectGuard qui
     { path: 'books-view', component: BooksViewComponent },
-    { path: 'books-view/:bookId', component: BooksViewComponent},
+    { path: 'books-view/:bookId', component: BooksViewComponent, canActivate: [AuthGuard] },
     { path: 'book-form/:mode', component: BookFormComponent, canActivate: [AuthGuard] },
     { path: 'book-form/:bookId/:mode', component: BookFormComponent, canActivate: [AuthGuard] },
 ];

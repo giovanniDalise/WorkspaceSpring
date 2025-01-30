@@ -1,79 +1,45 @@
-/*package com.librarymknw.bookService.security;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
-
-@Configuration
-public class SecurityConfig {
-
-    private final CorsConfigurationSource corsConfigurationSource;
-
-    public SecurityConfig(CorsConfigurationSource corsConfigurationSource) {
-        this.corsConfigurationSource = corsConfigurationSource;
-    }
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .csrf(csrf -> csrf.disable())  // Disabilita CSRF solo se necessario
-                .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()
-                )
-                .addFilterBefore(new CorsFilter(corsConfigurationSource), UsernamePasswordAuthenticationFilter.class) // Aggiunge il filtro CORS
-                .build();
-    }
-}
-
-/*
 package com.librarymknw.bookService.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
+
+import java.util.List;
+
 
 @Configuration
 public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable())  // Disabilita CSRF se non è necessario
-                .authorizeHttpRequests(authz -> authz
-                        .requestMatchers(HttpMethod.GET, "/library/**").permitAll()  // Permetti GET senza autenticazione
-                        .requestMatchers(HttpMethod.POST, "/library/**").authenticated()  // Solo per utenti autenticati
-                        .requestMatchers(HttpMethod.PUT, "/library/**").authenticated()  // Solo per utenti autenticati
-                        .requestMatchers(HttpMethod.DELETE, "/library/**").authenticated()  // Solo per utenti autenticati
-                        .anyRequest().authenticated()  // Tutte le altre richieste richiedono autenticazione
+        return http
+                .csrf(csrf -> csrf.disable())  // Disabilitiamo CSRF (usato per form-based authentication)
+                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // API REST senza sessione
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.GET, "/library").permitAll() // Tutti possono vedere i libri
+                        .requestMatchers(HttpMethod.GET, "/library/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/library").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/library/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/library/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/library/findByBook").authenticated() // Solo autenticati possono cercare libri avanzati
+                        .anyRequest().authenticated()
                 )
-                .addFilterBefore(new JwtRequestFilter(), UsernamePasswordAuthenticationFilter.class)  // Aggiungi il filtro JWT
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()));  // Configura CORS
-
-        return http.build();
+                .cors(cors -> cors.configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()))  // Configurazione CORS
+                .addFilterBefore(new JwtRequestFilter(), UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 
-    // Configurazione CORS
-    private UrlBasedCorsConfigurationSource corsConfigurationSource() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("*");  // Consenti tutte le origini (modificare se necessario)
-        config.addAllowedMethod(HttpMethod.GET);  // Permetti il metodo GET
-        config.addAllowedMethod(HttpMethod.POST);  // Permetti il metodo POST
-        config.addAllowedMethod(HttpMethod.PUT);  // Permetti il metodo PUT
-        config.addAllowedMethod(HttpMethod.DELETE);  // Permetti il metodo DELETE
-        config.addAllowedHeader("*");  // Consenti qualsiasi header
-        source.registerCorsConfiguration("/**", config);  // Applica la configurazione CORS a tutte le rotte
-        return source;
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 }
-*/
+

@@ -1,4 +1,3 @@
-/*
 package com.librarymknw.bookService.security;
 
 import com.auth0.jwt.JWT;
@@ -11,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,7 +19,9 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.security.Key;
 import java.util.ArrayList;
+import java.util.List;
 
 public class JwtRequestFilter extends OncePerRequestFilter {
 
@@ -32,7 +34,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String requestURI = request.getRequestURI();
 
         // Applicare il filtro solo per richieste che richiedono il token (ad esempio, POST, PUT, DELETE)
-        if (requestURI.startsWith("/library/") && !request.getMethod().equalsIgnoreCase(HttpMethod.GET.name())) {
+        if (requestURI.startsWith("/library/") && !requestURI.equals("/library/findByString")) {
             if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN, "Token mancante o non valido");
                 return; // Blocca la richiesta
@@ -44,7 +46,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 String username = decodedJWT.getSubject();
 
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    UserDetails userDetails = new User(username, "", new ArrayList<>());
+                    UserDetails userDetails = new User(username, "", List.of(new SimpleGrantedAuthority("ROLE_ADMIN")));
                     UsernamePasswordAuthenticationToken authToken =
                             new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -67,4 +69,3 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     }
 
 }
-*/

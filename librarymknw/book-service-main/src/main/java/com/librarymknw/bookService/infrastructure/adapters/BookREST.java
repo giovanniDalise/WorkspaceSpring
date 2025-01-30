@@ -4,6 +4,7 @@ import com.librarymknw.bookService.core.domain.models.Book;
 import com.librarymknw.bookService.core.ports.BookRepositoryPort;
 import com.librarymknw.bookService.core.ports.BookServicePort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,6 +31,7 @@ public class BookREST {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Long> addBook(@RequestBody Book book) {
         try {
             Long createdBookId = bookService.createBook(book);
@@ -41,6 +43,7 @@ public class BookREST {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Long> deleteBook(@PathVariable Long id) {
         try {
             Long deletedBookId = bookService.deleteBook(id);
@@ -52,6 +55,7 @@ public class BookREST {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Long> updateBook(@PathVariable Long id, @RequestBody Book book) {
         try {
             Long updatedBookId = bookService.updateBook(id, book);
@@ -63,6 +67,7 @@ public class BookREST {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Book> getBookById(@PathVariable Long id) {
         try {
             Book book = bookService.getBookById(id);
@@ -88,6 +93,7 @@ public class BookREST {
     }
 
     @PostMapping("/findByBook")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Book>> findBooksByBook(@RequestBody Book book) {
         try {
             List<Book> books = bookService.getBooksByObject(book);
