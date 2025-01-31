@@ -1,4 +1,3 @@
-/*
 package com.librarymknw.bookService;
 
 import com.auth0.jwt.JWT;
@@ -84,6 +83,8 @@ public class BookServiceIntegrationTest {
         // Questo test verifica semplicemente che il contesto venga caricato
     }
 
+
+
     @Test
     public void testGetBooks() throws Exception {
         // Testa la richiesta GET per ottenere tutti i libri con il token
@@ -113,8 +114,7 @@ public class BookServiceIntegrationTest {
                 .andExpect(jsonPath("$.title").value("Test Book"));
     }
 
-*/
-/*
+
     @Test
     public void testCreateBook() throws Exception {
         // Mocka il comportamento del repository per creare il libro
@@ -131,9 +131,6 @@ public class BookServiceIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").value(1)); // Verifica che il risultato sia 1 (ID del libro creato)
     }
-*//*
-
-
 
     @Test
     public void testUpdateBook() throws Exception {
@@ -206,5 +203,5 @@ public class BookServiceIntegrationTest {
                 .andExpect(jsonPath("$[0].bookId").value(1))
                 .andExpect(jsonPath("$[0].title").value("Test Book"));
     }
+}
 
-}*/

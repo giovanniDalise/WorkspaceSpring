@@ -1,4 +1,3 @@
-/*
 package com.librarymknw.authService;
 
 import com.librarymknw.authService.application.AuthServiceMainApplication;
@@ -15,4 +14,3 @@ class AuthServiceMainApplicationTests {
 	}
 
 }
-*/

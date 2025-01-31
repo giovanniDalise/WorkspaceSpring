@@ -19,14 +19,16 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())  // Disabilitiamo CSRF (usato per form-based authentication)
+                //controlli per chiamare le risorse per ruoli gia presenti sul controller per evitare conflitti
+                //qui tra doppi controlli qui ho utilizzato permitAll() e autenticated()
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // API REST senza sessione
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/library").permitAll() // Tutti possono vedere i libri
                         .requestMatchers(HttpMethod.GET, "/library/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/library").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/library/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/library/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/library/findByBook").authenticated() // Solo autenticati possono cercare libri avanzati
+                        .requestMatchers(HttpMethod.POST, "/library").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/library/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/library/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/library/findByBook").authenticated()
                         .anyRequest().authenticated()
                 )
                 .cors(cors -> cors.configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()))  // Configurazione CORS
