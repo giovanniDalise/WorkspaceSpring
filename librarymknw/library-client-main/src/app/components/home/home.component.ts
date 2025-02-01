@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
+import { AuthenticationService } from '../../services/authentication.service';
 
 @Component({
   selector: 'app-home',
@@ -18,7 +19,7 @@ export class HomeComponent implements OnInit {
   isAuthenticated: boolean = false;
   imageFile = "img/libraryBackground.jpg";
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthenticationService) {}
 
   ngOnInit() {
     if (this.isBrowser()) {
@@ -54,5 +55,12 @@ export class HomeComponent implements OnInit {
     if (this.text) {
         this.router.navigate(['/books-view'], { queryParams: { search: this.text } });
       }
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.isAuthenticated = false; // Aggiorna lo stato locale
+    this.isAdmin = false;
+    this.router.navigate(['/login']); // Reindirizza alla pagina di login
   }
 }

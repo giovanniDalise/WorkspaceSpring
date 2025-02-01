@@ -3,15 +3,14 @@
     <h1>Giovanni Library</h1>
     <ul>
         <li><a routerLink="/books-view">View All Books</a></li>
-        <li><a routerLink="/login">Login</a></li>       
-        
-        <!-- La ricerca per testo è visibile a tutti -->
+        <li *ngIf="!isAuthenticated"><a routerLink="/login">Login</a></li>
+        <li *ngIf="isAuthenticated"><button (click)="logout()">Logout</button></li>    
+    
         <li>
             <input type="string" [(ngModel)]="text" placeholder="Enter Text" />
             <button (click)="searchBookByText()">Search Book by Text</button>
         </li>
         
-        <!-- Se l'utente è admin, mostra le opzioni avanzate -->
         <ng-container *ngIf="isAdmin">
             <li>
                 <input type="number" [(ngModel)]="bookId" placeholder="Enter Book ID" />
@@ -21,5 +20,6 @@
             <li><a [routerLink]="['/book-form', 'create']">Add New Book</a></li>
         </ng-container>
     </ul>
+    
 </div>
 
